@@ -1,8 +1,11 @@
 import 'package:absensi/constants.dart';
+import 'package:absensi/screens/login_screen.dart';
+import 'package:absensi/screens/registration_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/components/round_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
+  static const String id = '/';
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
@@ -18,7 +21,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           Expanded(
             flex: 6,
             child: Container(
-              padding: EdgeInsets.all(100.0),
+              padding: EdgeInsets.all(80.0),
               child: Column(
                 children: <Widget>[
                   Text(
@@ -32,14 +35,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           Expanded(
             flex: 4,
             child: Container(
+              padding: EdgeInsets.only(left: 80.0, right: 80.0),
               decoration: kContainerDecoration,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RoundedButton(
                     titleButton: 'Login',
                     colorButton: Color(0xFF2E4C6D),
-                    pressedButton: () {},
+                    pressedButton: () {
+                      Navigator.pushNamed(context, LoginScreen.id);
+                    },
                   ),
                   SizedBox(
                     height: 20.0,
@@ -47,7 +54,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   RoundedButton(
                     titleButton: 'Register',
                     colorButton: Color(0xFFFC997C),
-                    pressedButton: () {},
+                    pressedButton: () {
+                      Navigator.pushNamed(context, RegistrationScreen.id);
+                    },
                   )
                 ],
               ),

@@ -21,14 +21,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           Expanded(
             flex: 6,
             child: Container(
-              padding: EdgeInsets.all(80.0),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    'Logo',
-                    style: kSendButtonTextStyle,
+              padding: EdgeInsets.all(10.0),
+              child: Center(
+                child: Image(
+                  image: AssetImage(
+                    'assets/logo.png',
                   ),
-                ],
+                ),
               ),
             ),
           ),

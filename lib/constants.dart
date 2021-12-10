@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const kColorMain = Color(0xFF2E4C6D);
+
 const kSendButtonTextStyle = TextStyle(
   color: Colors.white,
   fontWeight: FontWeight.bold,
@@ -30,3 +32,8 @@ const kTextFieldDecoration = InputDecoration(
   //   //borderRadius: BorderRadius.all(Radius.circular(20.0)),
   // ),
 );
+
+class GradientColors {
+  static List<Color> checkIn = [Color(0xFF2FDD92), Color(0xFf34BE82)];
+  static List<Color> checkOut = [Colors.pink, Colors.red];
+}

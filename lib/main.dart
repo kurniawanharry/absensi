@@ -1,3 +1,4 @@
+import 'package:absensi/screens/home_screen.dart';
 import 'package:absensi/screens/login_screen.dart';
 import 'package:absensi/screens/registration_screen.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class Absen extends StatelessWidget {
         WelcomeScreen.id: (context) => WelcomeScreen(),
         LoginScreen.id: (context) => LoginScreen(),
         RegistrationScreen.id: (context) => RegistrationScreen(),
+        HomeScreen.id: (context) => HomeScreen(),
       },
     );
   }

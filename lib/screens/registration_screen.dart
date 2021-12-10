@@ -20,52 +20,50 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           Expanded(
             flex: 4,
             child: Container(
-              padding: EdgeInsets.all(100.0),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    'Logo',
-                    style: kSendButtonTextStyle,
+              padding: EdgeInsets.all(10.0),
+              child: Center(
+                child: Image(
+                  image: AssetImage(
+                    'assets/logo.png',
                   ),
-                ],
+                ),
               ),
             ),
           ),
           SingleChildScrollView(
-            child: Expanded(
-              flex: 6,
-              child: Container(
-                decoration: kContainerDecoration,
-                padding: EdgeInsets.only(
-                    left: 60.0, right: 60.0, top: 100.0, bottom: 100.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    RoundTextField(
-                      hintText: 'Masukan Email',
-                      inputType: TextInputType.emailAddress,
-                      outputValue: (value) {},
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    RoundTextField(
-                      hintText: 'Masukan Password',
-                      secureText: true,
-                      outputValue: (value) {},
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    RoundedButton(
-                      titleButton: 'Register',
-                      colorButton: Color(0xFFFC997C),
-                      pressedButton: () {
-                        //Navigator.pushNamed(context, LoginScreen.id);
-                      },
-                    ),
-                  ],
-                ),
+            child: Container(
+              decoration: kContainerDecoration,
+              padding: EdgeInsets.only(
+                  left: 60.0, right: 60.0, top: 100.0, bottom: 100.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  RoundTextField(
+                    hintText: 'Masukan Email',
+                    inputType: TextInputType.emailAddress,
+                    iconButton: Icon(Icons.email),
+                    outputValue: (value) {},
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  RoundTextField(
+                    hintText: 'Masukan Password',
+                    secureText: true,
+                    iconButton: Icon(Icons.lock),
+                    outputValue: (value) {},
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  RoundedButton(
+                    titleButton: 'Register',
+                    colorButton: Color(0xFFFC997C),
+                    pressedButton: () {
+                      //Navigator.pushNamed(context, LoginScreen.id);
+                    },
+                  ),
+                ],
               ),
             ),
           ),

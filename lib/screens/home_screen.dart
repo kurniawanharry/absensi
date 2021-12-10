@@ -1,8 +1,11 @@
 import 'package:absensi/components/round_button.dart';
 import 'package:absensi/components/round_textfield.dart';
 import 'package:absensi/constants.dart';
+import 'package:absensi/widgets/camera_page.dart';
 import 'package:absensi/widgets/list_view_user.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = "/home_screen";
@@ -16,13 +19,29 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kColorMain,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        child: Icon(
-          Icons.add_a_photo,
-          color: Colors.black54,
-        ),
-        onPressed: () {},
+      floatingActionButton: SpeedDial(
+        overlayOpacity: 0.2,
+        activeForegroundColor: Colors.black54,
+        animatedIcon: AnimatedIcons.menu_close,
+        spaceBetweenChildren: 10,
+        children: [
+          SpeedDialChild(
+              backgroundColor: Colors.green,
+              child: Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+              label: 'Check In!',
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CameraPage()));
+              }),
+          SpeedDialChild(
+            backgroundColor: Colors.red,
+            child: Icon(Icons.exit_to_app, color: Colors.white),
+            label: 'Check Out!',
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

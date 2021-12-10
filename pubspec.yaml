@@ -36,6 +36,8 @@ dependencies:
   flutter_speed_dial: ^4.3.0
   camera: ^0.9.4+5
   path_provider: ^2.0.8
+  geolocator: ^8.0.0
+  geocoding: ^2.0.1
 
 dev_dependencies:
   flutter_test:

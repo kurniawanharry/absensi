@@ -1,6 +1,7 @@
 import 'package:absensi/constants.dart';
 import 'package:absensi/screens/login_screen.dart';
 import 'package:absensi/screens/registration_screen.dart';
+import 'package:absensi/widgets/get_location.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/components/round_button.dart';
 

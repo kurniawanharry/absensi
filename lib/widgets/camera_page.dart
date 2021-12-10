@@ -19,8 +19,8 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
     cameraController.dispose();
+    super.dispose();
   }
 
   Future<File> takePicture() async {

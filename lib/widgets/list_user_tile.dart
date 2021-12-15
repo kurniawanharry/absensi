@@ -1,12 +1,22 @@
-import 'package:absensi/constants.dart';
 import 'package:flutter/material.dart';
 
 class ListUserTile extends StatelessWidget {
-  ListUserTile({this.userName, this.checkTime, this.userLocation});
+  ListUserTile(
+      {this.userName,
+      this.checkTime,
+      this.userLocation,
+      this.userCheckInOrOut,
+      this.userColor,
+      this.gradientColor,
+      this.absenImage});
 
   final String userName;
   final String checkTime;
   final String userLocation;
+  final String userCheckInOrOut;
+  final Color userColor;
+  final List<Color> gradientColor;
+  final String absenImage;
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +27,13 @@ class ListUserTile extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: LinearGradient(
-              colors: GradientColors.checkIn,
+              colors: gradientColor,
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.green ?? Colors.red,
+                color: userColor,
                 blurRadius: 12,
                 offset: Offset(0, 6),
               ),
@@ -35,11 +45,14 @@ class ListUserTile extends StatelessWidget {
             children: [
               Expanded(
                 flex: 2,
-                child: Image.asset(
-                  'assets/time.png',
-                  height: 64,
-                  width: 64,
-                ),
+                child: absenImage == null
+                    ? Image.network(
+                        'https://i.pinimg.com/736x/2b/e5/6b/2be56b052e9a4b15ab987d43eba3bbd2.jpg')
+                    : Image.network(
+                        'https://i.pinimg.com/736x/2b/e5/6b/2be56b052e9a4b15ab987d43eba3bbd2.jpg',
+                        width: 50,
+                        height: 50,
+                      ),
               ),
               Expanded(
                 flex: 4,
@@ -47,9 +60,20 @@ class ListUserTile extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      userName,
-                      style: TextStyle(color: Colors.white),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.account_circle_outlined,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          userName,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 8,
@@ -57,8 +81,11 @@ class ListUserTile extends StatelessWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.timer,
+                          Icons.access_time,
                           color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 3,
                         ),
                         Text(
                           checkTime,
@@ -67,13 +94,16 @@ class ListUserTile extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      height: 16,
+                      height: 8,
                     ),
                     Row(
                       children: [
                         Icon(
                           Icons.location_on,
                           color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 3,
                         ),
                         Flexible(
                           child: Text(
@@ -89,7 +119,7 @@ class ListUserTile extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Text(
-                  'Check Out!',
+                  userCheckInOrOut,
                   style: TextStyle(color: Colors.white),
                 ),
               ),

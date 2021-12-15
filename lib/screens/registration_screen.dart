@@ -1,4 +1,7 @@
 import 'package:absensi/components/round_textfield.dart';
+import 'package:absensi/screens/home_screen.dart';
+import 'package:absensi/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/constants.dart';
 import 'package:absensi/components/round_button.dart';
@@ -10,10 +13,13 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final _auth = AuthService();
+  String email;
+  String password;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2E4C6D),
+      backgroundColor: kColorMain,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -42,7 +48,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     hintText: 'Masukan Email',
                     inputType: TextInputType.emailAddress,
                     iconButton: Icon(Icons.email),
-                    outputValue: (value) {},
+                    outputValue: (value) {
+                      email = value;
+                    },
                   ),
                   SizedBox(
                     height: 10.0,
@@ -51,16 +59,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     hintText: 'Masukan Password',
                     secureText: true,
                     iconButton: Icon(Icons.lock),
-                    outputValue: (value) {},
+                    outputValue: (value) {
+                      password = value;
+                    },
                   ),
                   SizedBox(
                     height: 10.0,
                   ),
                   RoundedButton(
                     titleButton: 'Register',
-                    colorButton: Color(0xFFFC997C),
-                    pressedButton: () {
-                      //Navigator.pushNamed(context, LoginScreen.id);
+                    colorButton: kColorMain2,
+                    pressedButton: () async {
+                      final newUser = await _auth.registerUser(email, password);
+                      if (newUser != null) {
+                        Navigator.pushReplacementNamed(context, HomeScreen.id);
+                      }
                     },
                   ),
                 ],

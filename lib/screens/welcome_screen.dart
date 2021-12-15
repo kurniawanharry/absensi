@@ -1,7 +1,6 @@
 import 'package:absensi/constants.dart';
 import 'package:absensi/screens/login_screen.dart';
 import 'package:absensi/screens/registration_screen.dart';
-import 'package:absensi/widgets/get_location.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/components/round_button.dart';
 
@@ -43,7 +42,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 children: <Widget>[
                   RoundedButton(
                     titleButton: 'Login',
-                    colorButton: Color(0xFF2E4C6D),
+                    colorButton: kColorMain,
                     pressedButton: () {
                       Navigator.pushNamed(context, LoginScreen.id);
                     },
@@ -53,7 +52,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                   RoundedButton(
                     titleButton: 'Register',
-                    colorButton: Color(0xFFFC997C),
+                    colorButton: kColorMain2,
                     pressedButton: () {
                       Navigator.pushNamed(context, RegistrationScreen.id);
                     },

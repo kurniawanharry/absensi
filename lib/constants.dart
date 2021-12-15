@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const kColorMain = Color(0xFF2E4C6D);
+const kColorMain2 = Color(0xFFFC997C);
 
 const kSendButtonTextStyle = TextStyle(
   color: Colors.white,
@@ -19,18 +20,8 @@ const kContainerDecoration = BoxDecoration(
 
 const kTextFieldDecoration = InputDecoration(
   hintText: 'Enter Values',
-  //contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
   border: OutlineInputBorder(),
   isDense: true,
-  //   borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  // ),
-  // focusedBorder: OutlineInputBorder(
-  //   borderSide: BorderSide(color: Colors.lightBlueAccent),
-  // ),
-  // enabledBorder: OutlineInputBorder(
-  //   borderSide: BorderSide(color: Colors.lightBlueAccent),
-  //   //borderRadius: BorderRadius.all(Radius.circular(20.0)),
-  // ),
 );
 
 class GradientColors {

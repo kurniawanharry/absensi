@@ -1,5 +1,7 @@
 import 'package:absensi/components/round_textfield.dart';
 import 'package:absensi/screens/home_screen.dart';
+import 'package:absensi/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/constants.dart';
 import 'package:absensi/components/round_button.dart';
@@ -12,10 +14,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _auth = AuthService();
+  String email;
+  String password;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2E4C6D),
+      backgroundColor: kColorMain,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -44,7 +49,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     hintText: 'Masukan Email',
                     inputType: TextInputType.emailAddress,
                     iconButton: Icon(Icons.email),
-                    outputValue: (value) {},
+                    outputValue: (value) {
+                      email = value;
+                    },
                   ),
                   SizedBox(
                     height: 10.0,
@@ -53,16 +60,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     hintText: 'Masukan Password',
                     secureText: true,
                     iconButton: Icon(Icons.lock),
-                    outputValue: (value) {},
+                    outputValue: (value) {
+                      password = value;
+                    },
                   ),
                   SizedBox(
                     height: 10.0,
                   ),
                   RoundedButton(
                     titleButton: 'Login',
-                    colorButton: Color(0xFF2E4C6D),
-                    pressedButton: () {
-                      Navigator.pushNamed(context, HomeScreen.id);
+                    colorButton: kColorMain,
+                    pressedButton: () async {
+                      dynamic user = await _auth.loginUser(email, password);
+                      if (user != null) {
+                        Navigator.pushReplacementNamed(context, HomeScreen.id);
+                      }
                     },
                   ),
                 ],

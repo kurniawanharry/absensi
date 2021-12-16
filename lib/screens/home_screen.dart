@@ -1,4 +1,4 @@
-import 'package:absensi/constants.dart';
+import 'package:absensi/components/constants.dart';
 import 'package:absensi/models/task.dart';
 import 'package:absensi/models/user.dart';
 import 'package:absensi/screens/camera_page.dart';
@@ -122,6 +122,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _determinePosition();
+    _getAddressFromLatLng();
+    _getCurrentLocation();
     _loadBool();
     Timer.periodic(const Duration(seconds: 1), (Timer t) => _getTime());
     super.dispose();
@@ -149,12 +151,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: kColorMain,
                 floatingActionButton: SpeedDial(
                   buttonSize: 60,
-                  backgroundColor: Colors.white,
+                  backgroundColor: kColorMain2,
                   overlayOpacity: 0.2,
                   activeForegroundColor: Colors.black54,
-                  animatedIcon: AnimatedIcons.menu_close,
+                  animatedIcon: AnimatedIcons.add_event,
                   spaceBetweenChildren: 20,
-                  childrenButtonSize: 60,
+                  childrenButtonSize: 70,
                   animatedIconTheme:
                       const IconThemeData(color: kColorMain, size: 30),
                   children: [
@@ -175,20 +177,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             ),
                           );
-                          imageAbsen == null
-                              ? Container(
-                                  child: CircularProgressIndicator(),
-                                )
-                              : DatabaseService(uid: loginUser.uid).addData(
-                                  _timeString,
-                                  _currentAddress,
-                                  'Check In!',
-                                  imageAbsen);
+                          if (imageAbsen == null) {
+                            Container(child: CircularProgressIndicator());
+                          } else {
+                            DatabaseService(uid: loginUser.uid).addData(
+                                _timeString,
+                                _currentAddress,
+                                'Check In!',
+                                imageAbsen);
 
-                          setState(() {
-                            isButton = true;
-                            _saveBool();
-                          });
+                            setState(() {
+                              isButton = true;
+                              _saveBool();
+                            });
+                          }
                         }),
                     SpeedDialChild(
                       backgroundColor: Colors.red,
@@ -207,32 +209,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                           ),
                         );
-                        imageAbsen == null
-                            ? Container(
-                                child: CircularProgressIndicator(),
-                              )
-                            : DatabaseService(uid: loginUser.uid).addData(
-                                _timeString,
-                                _currentAddress,
-                                'Check Out!',
-                                imageAbsen);
+                        if (imageAbsen == null) {
+                          Container(child: CircularProgressIndicator());
+                        } else {
+                          DatabaseService(uid: loginUser.uid).addData(
+                              _timeString,
+                              _currentAddress,
+                              'Check Out!',
+                              imageAbsen);
 
-                        setState(() {
-                          isButton = false;
-                          _saveBool();
-                        });
-                      },
-                    ),
-                    SpeedDialChild(
-                      backgroundColor: Colors.black,
-                      child: const Icon(
-                        Icons.door_back_door,
-                        color: Colors.white,
-                      ),
-                      label: 'Logout',
-                      onTap: () async {
-                        await _auth.signOut();
-                        Navigator.pop(context);
+                          setState(() {
+                            isButton = false;
+                            _saveBool();
+                          });
+                        }
                       },
                     ),
                   ],
@@ -244,13 +234,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       Expanded(
                         flex: 2,
                         child: Container(
-                          padding: EdgeInsets.only(left: 30, right: 30),
+                          margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          padding: const EdgeInsets.only(left: 30, right: 30),
                           decoration: kContainerDecoration.copyWith(
+                            color: kColorMain2,
                             borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(40.0),
-                              topRight: Radius.circular(40.0),
-                              bottomLeft: Radius.circular(40.0),
-                              bottomRight: Radius.circular(40.0),
+                              topLeft: Radius.circular(20.0),
+                              topRight: Radius.circular(20.0),
+                              bottomLeft: Radius.circular(20.0),
+                              bottomRight: Radius.circular(20.0),
                             ),
                           ),
                           child: SafeArea(
@@ -343,7 +335,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                 flex: 6,
                                 child: Container(
                                   margin:
-                                      EdgeInsets.only(left: 2.0, right: 20.0),
+                                      EdgeInsets.only(left: 2.0, right: 2.0),
+                                  child: Divider(
+                                    color: Colors.white,
+                                    height: 2,
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: CircleBorder(),
+                                    padding: EdgeInsets.all(20),
+                                    primary: kColorMain2,
+                                    onPrimary: kColorMain),
+                                onPressed: () async {
+                                  await _auth.signOut();
+                                  Navigator.pop(context);
+                                },
+                                child: Icon(
+                                  Icons.logout,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  margin:
+                                      EdgeInsets.only(left: 0.0, right: 20.0),
                                   child: Divider(
                                     color: Colors.white,
                                     height: 2,

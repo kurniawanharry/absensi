@@ -3,8 +3,9 @@ import 'package:absensi/screens/home_screen.dart';
 import 'package:absensi/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:absensi/constants.dart';
+import 'package:absensi/components/constants.dart';
 import 'package:absensi/components/round_button.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = '/registration_screen';
@@ -14,8 +15,10 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = AuthService();
+  String username;
   String email;
   String password;
+  String passwordConfirm;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,12 +43,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             child: Container(
               decoration: kContainerDecoration,
               padding: EdgeInsets.only(
-                  left: 60.0, right: 60.0, top: 100.0, bottom: 100.0),
+                  left: 60.0, right: 60.0, top: 50.0, bottom: 50.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
+                  Text('S I G N U P'),
+                  SizedBox(
+                    height: 20.0,
+                  ),
                   RoundTextField(
-                    hintText: 'Masukan Email',
+                    hintText: 'Username',
+                    inputType: TextInputType.emailAddress,
+                    iconButton: Icon(Icons.account_circle),
+                    outputValue: (value) {
+                      email = value;
+                    },
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  RoundTextField(
+                    hintText: 'Email',
                     inputType: TextInputType.emailAddress,
                     iconButton: Icon(Icons.email),
                     outputValue: (value) {
@@ -56,7 +74,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     height: 10.0,
                   ),
                   RoundTextField(
-                    hintText: 'Masukan Password',
+                    hintText: 'Password',
                     secureText: true,
                     iconButton: Icon(Icons.lock),
                     outputValue: (value) {
@@ -66,16 +84,36 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   SizedBox(
                     height: 10.0,
                   ),
+                  RoundTextField(
+                    hintText: 'Confirm Password',
+                    secureText: true,
+                    iconButton: Icon(Icons.lock_rounded),
+                    outputValue: (value) {
+                      passwordConfirm = value;
+                    },
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
                   RoundedButton(
-                    titleButton: 'Register',
+                    titleButton: 'SIGNUP',
                     colorButton: kColorMain2,
                     pressedButton: () async {
-                      final newUser = await _auth.registerUser(email, password);
-                      if (newUser != null) {
-                        Navigator.pushReplacementNamed(context, HomeScreen.id);
+                      if (password == passwordConfirm) {
+                        final newUser =
+                            await _auth.registerUser(email, password);
+                        if (newUser != null) {
+                          Navigator.pushNamed(context, HomeScreen.id);
+                        }
+                      } else {
+                        Fluttertoast.showToast(msg: 'Password Tidak Sama');
                       }
                     },
                   ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text('Already have an account ? L O G I N')
                 ],
               ),
             ),

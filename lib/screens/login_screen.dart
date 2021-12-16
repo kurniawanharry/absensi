@@ -3,7 +3,7 @@ import 'package:absensi/screens/home_screen.dart';
 import 'package:absensi/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:absensi/constants.dart';
+import 'package:absensi/components/constants.dart';
 import 'package:absensi/components/round_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,9 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Container(
               padding: EdgeInsets.all(10.0),
               child: Center(
-                child: Image(
-                  image: AssetImage(
-                    'assets/logo.png',
+                child: Container(
+                  child: Image(
+                    image: AssetImage(
+                      'assets/logo.png',
+                    ),
                   ),
                 ),
               ),
@@ -41,10 +43,14 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Container(
               decoration: kContainerDecoration,
               padding: EdgeInsets.only(
-                  left: 60.0, right: 60.0, top: 100.0, bottom: 100.0),
+                  left: 60.0, right: 60.0, top: 50.0, bottom: 50.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
+                  Text('L O G I N'),
+                  SizedBox(
+                    height: 20.0,
+                  ),
                   RoundTextField(
                     hintText: 'Masukan Email',
                     inputType: TextInputType.emailAddress,
@@ -65,10 +71,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 20.0,
                   ),
                   RoundedButton(
-                    titleButton: 'Login',
+                    titleButton: 'LOGIN',
                     colorButton: kColorMain,
                     pressedButton: () async {
                       dynamic user = await _auth.loginUser(email, password);
@@ -77,6 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                     },
                   ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text('Don\'t have an account yet ? S I G N U P '),
                 ],
               ),
             ),

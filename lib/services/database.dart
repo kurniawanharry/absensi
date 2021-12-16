@@ -1,5 +1,6 @@
 import 'package:absensi/models/task.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DatabaseService {
   final String uid;
@@ -25,11 +26,10 @@ class DatabaseService {
           'usertime': newTaskTime,
           'userlocation': newTaskLocation,
           'usercheck': newTaskCheck,
-          'userPhotoUrl': newPhotoURL ??
-              'https://images7.alphacoders.com/719/thumb-1920-719179.png',
+          'userPhotoUrl': newPhotoURL,
         })
-        .then((value) => print('Data Ditambah'))
-        .catchError((e) => print('Gagal'));
+        .then((value) => Fluttertoast.showToast(msg: 'Data Berhasil Ditambah'))
+        .catchError((e) => Fluttertoast.showToast(msg: 'Data Gagal Ditambah'));
   }
 
   List<Task> _userAbsenList(QuerySnapshot snapshot) {
@@ -47,7 +47,7 @@ class DatabaseService {
     return absen
         .doc(uid)
         .collection('check')
-        .orderBy('lastupdate', descending: false)
+        .orderBy('lastupdate', descending: true)
         .snapshots()
         .map(_userAbsenList);
   }

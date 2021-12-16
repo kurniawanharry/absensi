@@ -18,12 +18,8 @@ void main() async {
 class Absen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        StreamProvider<UserAbsen>.value(
-          value: AuthService().user,
-        ),
-      ],
+    return StreamProvider<UserAbsen>.value(
+      value: AuthService().user,
       child: MaterialApp(
         initialRoute: FirebaseAuth.instance.currentUser == null
             ? WelcomeScreen.id

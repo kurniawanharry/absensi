@@ -1,3 +1,4 @@
+import 'package:absensi/components/custom_painter.dart';
 import 'package:flutter/material.dart';
 
 class ListUserTile extends StatelessWidget {
@@ -40,19 +41,32 @@ class ListUserTile extends StatelessWidget {
             ],
           ),
         ),
+        Positioned(
+          right: 0,
+          bottom: 0,
+          top: 0,
+          child: CustomPaint(
+            size: Size(100, 0),
+            painter: CanvasPhoto(),
+          ),
+        ),
         Positioned.fill(
           child: Row(
             children: [
               Expanded(
                 flex: 2,
-                child: absenImage == null
-                    ? Image.network(
-                        'https://i.pinimg.com/736x/2b/e5/6b/2be56b052e9a4b15ab987d43eba3bbd2.jpg')
-                    : Image.network(
-                        'https://i.pinimg.com/736x/2b/e5/6b/2be56b052e9a4b15ab987d43eba3bbd2.jpg',
-                        width: 50,
-                        height: 50,
+                child: Container(
+                  margin: EdgeInsets.only(left: 3, top: 3, bottom: 3, right: 3),
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        bottomLeft: Radius.circular(20.0),
                       ),
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: NetworkImage(absenImage),
+                      )),
+                ),
               ),
               Expanded(
                 flex: 4,

@@ -84,7 +84,7 @@ class CanvasPhoto extends CustomPainter {
     path.quadraticBezierTo(size.width, 0, size.width - radius, 0);
     path.quadraticBezierTo(-radius, 0.8 * radius, 0, size.height);
 
-    paint.color = Color(0x302E4C6D);
+    paint.color = Color(0x30FFFFFF);
     canvas.drawPath(path, paint);
   }
 

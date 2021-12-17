@@ -1,5 +1,6 @@
 import 'package:absensi/components/custom_painter.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ListUserTile extends StatelessWidget {
   ListUserTile(
@@ -55,17 +56,30 @@ class ListUserTile extends StatelessWidget {
             children: [
               Expanded(
                 flex: 2,
-                child: Container(
-                  margin: EdgeInsets.only(left: 3, top: 3, bottom: 3, right: 3),
-                  decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        bottomLeft: Radius.circular(20.0),
+                child: ClipRRect(
+                  child: CachedNetworkImage(
+                    imageUrl: absenImage,
+                    placeholder: (context, url) => Center(
+                        child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator())),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    imageBuilder: (context, imageProvider) => Container(
+                      margin:
+                          EdgeInsets.only(left: 3, top: 3, bottom: 3, right: 3),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(20.0),
+                          bottomLeft: Radius.circular(20.0),
+                        ),
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: imageProvider,
+                        ),
                       ),
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: NetworkImage(absenImage),
-                      )),
+                    ),
+                  ),
                 ),
               ),
               Expanded(

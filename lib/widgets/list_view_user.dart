@@ -12,10 +12,7 @@ class ListViewUser extends StatelessWidget {
         return absen == null
             ? Container(
                 alignment: Alignment.center,
-                child: Text(
-                  'Loading. . .',
-                  style: TextStyle(color: Colors.white),
-                ),
+                child: const CircularProgressIndicator(),
               )
             : ListView.builder(
                 itemCount: absen.length,

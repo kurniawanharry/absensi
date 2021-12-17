@@ -1,18 +1,23 @@
+import 'dart:io';
+
 import 'package:absensi/components/constants.dart';
 import 'package:absensi/models/task.dart';
 import 'package:absensi/models/user.dart';
 import 'package:absensi/screens/camera_page.dart';
+import 'package:absensi/screens/welcome_screen.dart';
 import 'package:absensi/services/auth.dart';
 import 'package:absensi/services/database.dart';
 import 'package:absensi/widgets/list_view_user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
-
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,9 +30,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _auth = AuthService();
   bool isButton;
+  bool exitSpinner = false;
   Position _currentPosition;
   String _currentAddress;
   String _timeString;
+  DateTime lastPressed;
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -60,10 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
       await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.low,
       ).then((Position position) {
-        setState(() {
-          _currentPosition = position;
-          _getAddressFromLatLng();
-        });
+        if (mounted) {
+          setState(() {
+            _currentPosition = position;
+            _getAddressFromLatLng();
+          });
+        }
       });
     } catch (e) {
       print(e);
@@ -77,10 +86,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
       Placemark place = placemarks[0];
 
-      setState(() {
-        _currentAddress =
-            "${place.locality}, ${place.postalCode}, ${place.country}";
-      });
+      if (mounted) {
+        setState(() {
+          _currentAddress =
+              "${place.locality}, ${place.postalCode}, ${place.country}";
+        });
+      }
     } catch (e) {
       print(e);
     }
@@ -104,10 +115,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _loadBool() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    if (mounted)
+    if (mounted) {
       setState(() {
         isButton = preferences.getBool("check");
       });
+    }
   }
 
   @override
@@ -144,8 +156,20 @@ class _HomeScreenState extends State<HomeScreen> {
             value: DatabaseService(uid: loginUser.uid).absenUser,
             child: WillPopScope(
               onWillPop: () async {
-                //SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-                return true;
+                final now = DateTime.now();
+                final maxDuration = Duration(seconds: 2);
+                final isWarning = lastPressed == null ||
+                    now.difference(lastPressed) > maxDuration;
+
+                if (isWarning) {
+                  lastPressed = DateTime.now();
+                  const msg = 'Tekan sekali lagi untuk keluar';
+                  Fluttertoast.showToast(msg: msg);
+                  return false;
+                } else {
+                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                  return true;
+                }
               },
               child: Scaffold(
                 backgroundColor: kColorMain,
@@ -227,156 +251,198 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                body: SafeArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          padding: const EdgeInsets.only(left: 30, right: 30),
-                          decoration: kContainerDecoration.copyWith(
-                            color: kColorMain2,
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20.0),
-                              topRight: Radius.circular(20.0),
-                              bottomLeft: Radius.circular(20.0),
-                              bottomRight: Radius.circular(20.0),
+                body: ModalProgressHUD(
+                  inAsyncCall: exitSpinner,
+                  child: SafeArea(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            decoration: kContainerDecoration.copyWith(
+                              color: kColorMain2,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(20.0),
+                                topRight: Radius.circular(20.0),
+                                bottomLeft: Radius.circular(20.0),
+                                bottomRight: Radius.circular(20.0),
+                              ),
                             ),
-                          ),
-                          child: SafeArea(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.date_range,
-                                      color: kColorMain,
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Expanded(
+                            child: SafeArea(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.date_range,
+                                        color: kColorMain,
+                                      ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Expanded(
+                                          flex: 2,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Date Time',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .caption,
+                                              ),
+                                              Text(_timeString.toString()),
+                                            ],
+                                          )),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Icon(
+                                        Icons.location_on,
+                                        color: kColorMain,
+                                      ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Expanded(
                                         flex: 2,
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
-                                          children: [
+                                          children: <Widget>[
                                             Text(
-                                              'Date Time',
+                                              'Location',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .caption,
                                             ),
-                                            Text(_timeString.toString()),
+                                            if (_currentPosition != null &&
+                                                _currentAddress != null)
+                                              Text(_currentAddress,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText2),
                                           ],
-                                        )),
-                                    SizedBox(
-                                      width: 16,
-                                    ),
-                                    Icon(
-                                      Icons.location_on,
-                                      color: kColorMain,
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            'Location',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .caption,
-                                          ),
-                                          if (_currentPosition != null &&
-                                              _currentAddress != null)
-                                            Text(_currentAddress,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  margin:
-                                      EdgeInsets.only(left: 20.0, right: 2.0),
-                                  child: Divider(
-                                    color: Colors.white,
-                                    height: 2,
+                        Container(
+                            padding: EdgeInsets.only(top: 20),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.only(left: 20.0, right: 2.0),
+                                    child: Divider(
+                                      color: Colors.white,
+                                      height: 2,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Text(
-                                'History',
-                                style: kSendButtonTextStyle,
-                              ),
-                              Expanded(
-                                flex: 6,
-                                child: Container(
-                                  margin:
-                                      EdgeInsets.only(left: 2.0, right: 2.0),
-                                  child: Divider(
-                                    color: Colors.white,
-                                    height: 2,
+                                Text(
+                                  'History',
+                                  style: kSendButtonTextStyle,
+                                ),
+                                Expanded(
+                                  flex: 6,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.only(left: 2.0, right: 2.0),
+                                    child: Divider(
+                                      color: Colors.white,
+                                      height: 2,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: CircleBorder(),
-                                    padding: EdgeInsets.all(20),
-                                    primary: kColorMain2,
-                                    onPrimary: kColorMain),
-                                onPressed: () async {
-                                  await _auth.signOut();
-                                  Navigator.pop(context);
-                                },
-                                child: Icon(
-                                  Icons.logout,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                  margin:
-                                      EdgeInsets.only(left: 0.0, right: 20.0),
-                                  child: Divider(
-                                    color: Colors.white,
-                                    height: 2,
+                                Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        shape: CircleBorder(),
+                                        primary: kColorMain2,
+                                        onPrimary: kColorMain),
+                                    onPressed: () {
+                                      showDialog<String>(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text('Logout'),
+                                              content: const Text(
+                                                  'Are you sure you want to sign out ?'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, 'Cancel'),
+                                                  child: const Text('Cancel'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        exitSpinner = true;
+                                                      });
+                                                    }
+                                                    await _auth.signOut();
+                                                    Navigator
+                                                        .pushNamedAndRemoveUntil(
+                                                            context,
+                                                            WelcomeScreen.id,
+                                                            (route) => false);
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        exitSpinner = false;
+                                                      });
+                                                    }
+                                                  },
+                                                  child: const Text('OK'),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: Icon(
+                                      Icons.logout,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          )),
-                      Expanded(
-                        flex: 6,
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          child: ListViewUser(),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.only(left: 0.0, right: 20.0),
+                                    child: Divider(
+                                      color: Colors.white,
+                                      height: 2,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )),
+                        Expanded(
+                          flex: 6,
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            child: ListViewUser(),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

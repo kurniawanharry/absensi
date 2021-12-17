@@ -1,15 +1,8 @@
-import 'package:absensi/components/loading.dart';
-import 'package:absensi/models/user.dart';
+import 'package:absensi/components/constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:provider/provider.dart';
-
-final Color yellow = Color(0xfffbc31b);
-final Color orange = Color(0xfffb6900);
+import 'package:camera/camera.dart';
 
 class CameraPage extends StatefulWidget {
   @override
@@ -19,26 +12,29 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   bool loading = false;
   File _imageFile;
-  final ImagePicker picker = ImagePicker();
+  XFile pickedFile;
+  int camera = 1;
 
-  Future pickImage() async {
-    final XFile pickedFile = await picker.pickImage(source: ImageSource.camera);
-    setState(() {
-      _imageFile = File(pickedFile.path);
-    });
+  CameraController controller;
+  Future<void> initializeCamera() async {
+    var cameras = await availableCameras();
+    controller = CameraController(cameras[camera], ResolutionPreset.medium);
+    await controller.initialize();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
+    controller.dispose();
     super.dispose();
   }
 
   String userPhotoUrl;
+
   Future uploadImageToFirebase(BuildContext context) async {
-    String fileName = (_imageFile.path);
+    String filePath = _imageFile.path;
     FirebaseStorage storage = FirebaseStorage.instance;
-    Reference ref = storage.ref().child('uplouds/${fileName}');
+    Reference ref = storage.ref().child('uplouds/${filePath}');
     UploadTask uploadTask = ref.putFile(_imageFile);
     await uploadTask.then((res) =>
         res.ref.getDownloadURL().then((value) => userPhotoUrl = value));
@@ -46,112 +42,117 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? Loading()
-        : Scaffold(
-            body: Stack(
-              children: <Widget>[
-                Container(
-                  height: 360,
-                  decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(50.0),
-                          bottomRight: Radius.circular(50.0)),
-                      gradient: LinearGradient(
-                          colors: [orange, yellow],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight)),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 80),
-                  child: Column(
-                    children: <Widget>[
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Text(
-                            "Uploading Image to Firebase Storage",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28,
-                                fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                      ),
+    return Scaffold(
+      backgroundColor: kColorMain,
+      body: FutureBuilder(
+        future: initializeCamera(),
+        builder: (context, snapshot) => (snapshot.connectionState ==
+                ConnectionState.done)
+            ? Stack(
+                children: [
+                  Column(
+                    children: [
                       SizedBox(
-                        height: 20.0,
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height /
+                            controller.value.aspectRatio,
+                        child: CameraPreview(controller),
                       ),
-                      Expanded(
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              height: double.infinity,
-                              margin: const EdgeInsets.only(
-                                  left: 30.0, right: 30.0, top: 10.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(30.0),
-                                child: _imageFile != null
-                                    ? Image.file(_imageFile)
-                                    : FlatButton(
-                                        child: Icon(
-                                          Icons.add_a_photo,
-                                          size: 50,
-                                        ),
-                                        onPressed: pickImage,
-                                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            margin: EdgeInsets.only(top: 50),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: CircleBorder(),
+                                  primary: kColorMain2,
+                                  onPrimary: kColorMain),
+                              child: Icon(
+                                Icons.keyboard_arrow_left,
+                                size: 20,
+                                color: kColorMain,
                               ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+                          Container(
+                            width: 70,
+                            height: 70,
+                            margin:
+                                EdgeInsets.only(top: 50, left: 20, right: 20),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: CircleBorder(
+                                      side: BorderSide(
+                                          color: Colors.white, width: 3)),
+                                  primary: kColorMain2,
+                                  onPrimary: kColorMain),
+                              child: Icon(
+                                Icons.camera,
+                                size: 40,
+                                color: kColorMain,
+                              ),
+                              onPressed: () async {
+                                if (!controller.value.isTakingPicture) {
+                                  final pickedFile =
+                                      await controller.takePicture();
+                                  if (pickedFile == null) {
+                                    print('Data Null');
+                                  } else {
+                                    setState(() {
+                                      _imageFile = File(pickedFile.path);
+                                    });
+                                    await uploadImageToFirebase(context);
+                                    if (userPhotoUrl != null) {
+                                      Navigator.pop(context, userPhotoUrl);
+                                    }
+                                  }
+                                }
+                              },
+                            ),
+                          ),
+                          Container(
+                            width: 50,
+                            height: 50,
+                            margin: EdgeInsets.only(top: 50),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: CircleBorder(),
+                                  primary: kColorMain2,
+                                  onPrimary: kColorMain),
+                              child: Icon(
+                                Icons.cameraswitch,
+                                size: 20,
+                                color: kColorMain,
+                              ),
+                              onPressed: () {
+                                if (camera == 0) {
+                                  camera++;
+                                } else {
+                                  camera--;
+                                }
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      uploadImageButton(context),
                     ],
                   ),
+                ],
+              )
+            : Center(
+                child: SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(),
                 ),
-              ],
-            ),
-          );
-  }
-
-  Widget uploadImageButton(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: <Widget>[
-          Container(
-            padding:
-                const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
-            margin: const EdgeInsets.only(
-                top: 30, left: 20.0, right: 20.0, bottom: 20.0),
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [yellow, orange],
-                ),
-                borderRadius: BorderRadius.circular(30.0)),
-            child: FlatButton(
-              onPressed: () async {
-                if (_imageFile == null) {
-                  Fluttertoast.showToast(msg: 'Foto Absen belum di ambil!');
-                  //return;
-                } else {
-                  setState(() {
-                    loading = true;
-                  });
-                  await uploadImageToFirebase(context);
-                  if (userPhotoUrl != null) {
-                    Navigator.pop(context, userPhotoUrl);
-                  }
-                  setState(() {
-                    loading = false;
-                  });
-                }
-              },
-              child: Text(
-                "Upload Image",
-                style: TextStyle(fontSize: 20),
               ),
-            ),
-          ),
-        ],
       ),
     );
   }

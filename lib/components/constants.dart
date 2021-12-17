@@ -10,6 +10,12 @@ const kSendButtonTextStyle = TextStyle(
   fontSize: 15.0,
 );
 
+const kTextStyle = TextStyle(
+    color: Colors.white,
+    letterSpacing: 2.0,
+    fontSize: 2.0,
+    fontFamily: 'BebasNeue');
+
 const kContainerDecoration = BoxDecoration(
   color: Colors.white,
   borderRadius: BorderRadius.only(

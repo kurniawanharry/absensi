@@ -9,18 +9,21 @@ class RoundTextField extends StatelessWidget {
     this.outputValue,
     this.secureText = false,
     this.iconButton,
+    this.validator,
   });
   final TextInputType inputType;
   final Function outputValue;
   final bool secureText;
   final String hintText;
   final Widget iconButton;
+  final FormFieldValidator<String> validator;
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       keyboardType: inputType,
       obscureText: secureText,
       onChanged: outputValue,
+      validator: validator,
       style: TextStyle(
         color: Colors.black54,
       ),

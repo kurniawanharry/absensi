@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = "/home_screen";
@@ -31,7 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool exitSpinner = false;
   Position _currentPosition;
   String _currentAddress;
+  String _currentAddressCountry;
   String _timeString;
+  String _time;
   DateTime lastPressed;
 
   Future<Position> _determinePosition() async {
@@ -88,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _currentAddress =
               "${place.locality}, ${place.postalCode}, ${place.country}";
+          _currentAddressCountry = place.country;
         });
       }
     } catch (e) {
@@ -98,10 +102,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void _getTime() {
     final String formattedDateTime =
         DateFormat.yMEd().add_jm().format(DateTime.now()).toString();
+    final String formattedTime =
+        DateFormat.E().add_jms().format(DateTime.now()).toString();
 
     if (mounted) {
       setState(() {
         _timeString = formattedDateTime;
+        _time = formattedTime;
       });
     }
   }
@@ -185,10 +192,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     SpeedDialChild(
                         backgroundColor: Colors.green,
-                        child: const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                        ),
+                        child:
+                            FaIcon(FontAwesomeIcons.check, color: Colors.white),
                         label: 'Check In!',
                         visible: isButton == true ? false : true,
                         onTap: () async {
@@ -204,8 +209,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             Container(child: CircularProgressIndicator());
                           } else {
                             DatabaseService(uid: loginUser.uid).addData(
-                                _timeString,
-                                _currentAddress,
+                                _time,
+                                _currentAddressCountry,
                                 'Check In!',
                                 imageAbsen);
 
@@ -217,10 +222,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         }),
                     SpeedDialChild(
                       backgroundColor: Colors.red,
-                      child: const Icon(
-                        Icons.exit_to_app,
-                        color: Colors.white,
-                      ),
+                      child: FaIcon(FontAwesomeIcons.checkDouble,
+                          color: Colors.white),
                       label: 'Check Out!',
                       visible: isButton == true ? true : false,
                       onTap: () async {
@@ -235,11 +238,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (imageAbsen == null) {
                           Container(child: CircularProgressIndicator());
                         } else {
-                          DatabaseService(uid: loginUser.uid).addData(
-                              _timeString,
-                              _currentAddress,
-                              'Check Out!',
-                              imageAbsen);
+                          DatabaseService(uid: loginUser.uid).addData(_time,
+                              _currentAddressCountry, 'Check Out!', imageAbsen);
 
                           setState(() {
                             isButton = false;
@@ -430,7 +430,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
-                                              title: const Text('Logout'),
+                                              backgroundColor: kColorMain2,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              title: Text(
+                                                'Logout',
+                                                style: kTextStyle.copyWith(
+                                                  color: kColorMain,
+                                                ),
+                                              ),
                                               content: const Text(
                                                   'Are you sure you want to sign out ?'),
                                               actions: [
@@ -438,7 +448,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   onPressed: () =>
                                                       Navigator.pop(
                                                           context, 'Cancel'),
-                                                  child: const Text('Cancel'),
+                                                  child: const Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                        color: kColorMain),
+                                                  ),
                                                 ),
                                                 TextButton(
                                                   onPressed: () async {
@@ -459,15 +473,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       });
                                                     }
                                                   },
-                                                  child: const Text('OK'),
+                                                  child: const Text('OK',
+                                                      style: TextStyle(
+                                                          color: kColorMain)),
                                                 ),
                                               ],
                                             );
                                           });
                                     },
-                                    child: Icon(
-                                      Icons.logout,
-                                    ),
+                                    child: FaIcon(FontAwesomeIcons.signOutAlt),
                                   ),
                                 ),
                                 Expanded(

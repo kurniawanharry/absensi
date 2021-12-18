@@ -48,6 +48,7 @@ dependencies:
   flutter_spinkit: ^5.1.0
   cached_network_image: ^3.2.0
   camera: ^0.9.4+5
+  font_awesome_flutter: ^9.2.0
 
 dev_dependencies:
   flutter_test:

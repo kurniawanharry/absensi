@@ -134,8 +134,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 final newUser =
                                     await _auth.registerUser(email, password);
                                 if (newUser != null) {
-                                  Navigator.pushReplacementNamed(
-                                      context, HomeScreen.id);
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context, HomeScreen.id, (route) => false);
                                 }
                               }
                             },

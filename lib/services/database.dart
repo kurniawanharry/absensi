@@ -47,7 +47,7 @@ class DatabaseService {
     return absen
         .doc(uid)
         .collection('check')
-        .orderBy('lastupdate', descending: true)
+        .orderBy('lastupdate', descending: false)
         .snapshots()
         .map(_userAbsenList);
   }

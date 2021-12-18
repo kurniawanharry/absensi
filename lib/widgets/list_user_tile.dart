@@ -4,15 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class ListUserTile extends StatelessWidget {
   ListUserTile(
-      {this.userName,
-      this.checkTime,
+      {this.checkTime,
       this.userLocation,
       this.userCheckInOrOut,
       this.userColor,
       this.gradientColor,
       this.absenImage});
 
-  final String userName;
   final String checkTime;
   final String userLocation;
   final String userCheckInOrOut;
@@ -55,7 +53,7 @@ class ListUserTile extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                flex: 2,
+                flex: 4,
                 child: ClipRRect(
                   child: CachedNetworkImage(
                     imageUrl: absenImage,
@@ -98,7 +96,7 @@ class ListUserTile extends StatelessWidget {
                           width: 3,
                         ),
                         Text(
-                          userName,
+                          userCheckInOrOut,
                           style: TextStyle(color: Colors.white),
                         ),
                       ],
@@ -142,13 +140,6 @@ class ListUserTile extends StatelessWidget {
                       ],
                     ),
                   ],
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text(
-                  userCheckInOrOut,
-                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],

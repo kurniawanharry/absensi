@@ -1,8 +1,8 @@
 import 'package:absensi/components/constants.dart';
 import 'package:absensi/models/task.dart';
+import 'package:absensi/widgets/list_user_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'list_user_tile.dart';
 
 class ListViewUser extends StatelessWidget {
   @override
@@ -14,16 +14,21 @@ class ListViewUser extends StatelessWidget {
                 alignment: Alignment.center,
                 child: const CircularProgressIndicator(),
               )
-            : ListView.builder(
+            : GridView.builder(
+                reverse: true,
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 1.7,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 2),
                 cacheExtent: 9999,
                 itemCount: absen.length,
                 itemBuilder: (context, index) {
                   final task = absen[index];
                   return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(1.0),
                       child: ListUserTile(
-                        userName: 'Username',
                         checkTime: task.userTime,
                         userLocation: task.userLocation,
                         userCheckInOrOut: task.userCheck,

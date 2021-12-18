@@ -111,8 +111,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 final user =
                                     await _auth.loginUser(email, password);
                                 if (user != null) {
-                                  Navigator.pushReplacementNamed(
-                                      context, HomeScreen.id);
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context, HomeScreen.id, (route) => false);
                                 }
                               }
                             },

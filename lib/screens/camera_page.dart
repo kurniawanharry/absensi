@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:camera/camera.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CameraPage extends StatefulWidget {
   @override
@@ -62,19 +63,16 @@ class _CameraPageState extends State<CameraPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
-                            width: 50,
-                            height: 50,
+                            width: 60,
+                            height: 60,
                             margin: EdgeInsets.only(top: 50),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   shape: CircleBorder(),
                                   primary: kColorMain2,
                                   onPrimary: kColorMain),
-                              child: Icon(
-                                Icons.keyboard_arrow_left,
-                                size: 20,
-                                color: kColorMain,
-                              ),
+                              child: FaIcon(FontAwesomeIcons.arrowLeft,
+                                  color: kColorMain),
                               onPressed: () {
                                 Navigator.pop(context);
                               },
@@ -117,8 +115,8 @@ class _CameraPageState extends State<CameraPage> {
                             ),
                           ),
                           Container(
-                            width: 50,
-                            height: 50,
+                            width: 60,
+                            height: 60,
                             margin: EdgeInsets.only(top: 50),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -127,7 +125,7 @@ class _CameraPageState extends State<CameraPage> {
                                   onPrimary: kColorMain),
                               child: Icon(
                                 Icons.cameraswitch,
-                                size: 20,
+                                size: 30,
                                 color: kColorMain,
                               ),
                               onPressed: () {

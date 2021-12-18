@@ -144,7 +144,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 20.0,
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text('Already have an account ?'),
                               TextButton(
@@ -153,7 +153,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                       context, LoginScreen.id);
                                 },
                                 child: Text(
-                                  'LOG IN',
+                                  'Log In',
                                   style: TextStyle(
                                       decoration: TextDecoration.underline),
                                 ),

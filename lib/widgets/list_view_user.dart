@@ -15,6 +15,7 @@ class ListViewUser extends StatelessWidget {
                 child: const CircularProgressIndicator(),
               )
             : ListView.builder(
+                cacheExtent: 9999,
                 itemCount: absen.length,
                 itemBuilder: (context, index) {
                   final task = absen[index];

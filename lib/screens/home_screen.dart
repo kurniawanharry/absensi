@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:absensi/components/constants.dart';
 import 'package:absensi/models/task.dart';
 import 'package:absensi/models/user.dart';
@@ -167,7 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Fluttertoast.showToast(msg: msg);
                   return false;
                 } else {
-                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                  await SystemChannels.platform
+                      .invokeMethod('SystemNavigator.pop');
                   return true;
                 }
               },
@@ -261,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           flex: 2,
                           child: Container(
                             margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            padding: const EdgeInsets.only(left: 20, right: 20),
                             decoration: kContainerDecoration.copyWith(
                               color: kColorMain2,
                               borderRadius: const BorderRadius.only(
@@ -272,65 +271,115 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             child: SafeArea(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              child: Stack(
+                                //mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.date_range,
-                                        color: kColorMain,
-                                      ),
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      Expanded(
-                                          flex: 2,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Date Time',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .caption,
-                                              ),
-                                              Text(_timeString.toString()),
-                                            ],
-                                          )),
-                                      SizedBox(
-                                        width: 16,
-                                      ),
-                                      Icon(
-                                        Icons.location_on,
-                                        color: kColorMain,
-                                      ),
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              'Location',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .caption,
-                                            ),
-                                            if (_currentPosition != null &&
-                                                _currentAddress != null)
-                                              Text(_currentAddress,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText2),
-                                          ],
+                                  Positioned(
+                                    top: 40,
+                                    bottom: 40,
+                                    left: 30,
+                                    right: 190,
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 20),
+                                      decoration: kContainerDecoration.copyWith(
+                                        color: Colors.white,
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(20.0),
+                                          topRight: Radius.circular(20.0),
+                                          bottomLeft: Radius.circular(20.0),
+                                          bottomRight: Radius.circular(20.0),
                                         ),
                                       ),
-                                    ],
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Date Time',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption,
+                                          ),
+                                          Text(_timeString.toString()),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 50,
+                                    bottom: 50,
+                                    left: 0,
+                                    right: 290,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20)),
+                                        color: kColorMain,
+                                      ),
+                                      child: Icon(
+                                        Icons.access_time,
+                                        color: kColorMain2,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 40,
+                                    bottom: 40,
+                                    left: 190,
+                                    right: 10,
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 20),
+                                      decoration: kContainerDecoration.copyWith(
+                                        color: Colors.white,
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(20.0),
+                                          topRight: Radius.circular(20.0),
+                                          bottomLeft: Radius.circular(20.0),
+                                          bottomRight: Radius.circular(20.0),
+                                        ),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            'Location',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption,
+                                          ),
+                                          if (_currentPosition != null &&
+                                              _currentAddress != null)
+                                            Text(_currentAddress,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText2),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 50,
+                                    bottom: 50,
+                                    left: 160,
+                                    right: 130,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(30)),
+                                        color: kColorMain,
+                                      ),
+                                      child: Icon(
+                                        Icons.location_on,
+                                        color: kColorMain2,
+                                        size: 30,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -354,8 +403,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 Text(
-                                  'History',
-                                  style: kSendButtonTextStyle,
+                                  'Activity',
+                                  style: kTextStyle.copyWith(fontSize: 30),
                                 ),
                                 Expanded(
                                   flex: 6,

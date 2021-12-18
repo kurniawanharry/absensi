@@ -14,35 +14,40 @@ class ListViewUser extends StatelessWidget {
                 alignment: Alignment.center,
                 child: const CircularProgressIndicator(),
               )
-            : GridView.builder(
-                reverse: true,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 1.7,
-                    crossAxisSpacing: 2,
-                    mainAxisSpacing: 2),
-                cacheExtent: 9999,
-                itemCount: absen.length,
-                itemBuilder: (context, index) {
-                  final task = absen[index];
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(1.0),
-                      child: ListUserTile(
-                        checkTime: task.userTime,
-                        userLocation: task.userLocation,
-                        userCheckInOrOut: task.userCheck,
-                        userColor: task.userCheck == 'Check In!'
-                            ? Colors.green
-                            : Colors.red,
-                        gradientColor: task.userCheck == 'Check In!'
-                            ? GradientColors.checkIn
-                            : GradientColors.checkOut,
-                        absenImage: task.userImage,
-                      ),
-                    ),
-                  );
-                });
+            : Align(
+                alignment: Alignment.topCenter,
+                child: GridView.builder(
+                    reverse: true,
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 1.7,
+                            crossAxisSpacing: 2,
+                            mainAxisSpacing: 2),
+                    cacheExtent: 9999,
+                    itemCount: absen.length,
+                    itemBuilder: (context, index) {
+                      final task = absen[index];
+                      return Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(1.0),
+                          child: ListUserTile(
+                            checkTime: task.userTime,
+                            userLocation: task.userLocation,
+                            userCheckInOrOut: task.userCheck,
+                            userColor: task.userCheck == 'Check In!'
+                                ? Colors.green
+                                : Colors.red,
+                            gradientColor: task.userCheck == 'Check In!'
+                                ? GradientColors.checkIn
+                                : GradientColors.checkOut,
+                            absenImage: task.userImage,
+                          ),
+                        ),
+                      );
+                    }),
+              );
       },
     );
   }

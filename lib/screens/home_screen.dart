@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final String formattedDateTime =
         DateFormat.yMEd().add_jm().format(DateTime.now()).toString();
     final String formattedTime =
-        DateFormat.E().add_jms().format(DateTime.now()).toString();
+        DateFormat.E().add_jm().format(DateTime.now()).toString();
 
     if (mounted) {
       setState(() {

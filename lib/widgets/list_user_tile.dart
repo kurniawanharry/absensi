@@ -34,8 +34,8 @@ class ListUserTile extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: userColor,
-                blurRadius: 12,
-                offset: Offset(0, 6),
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -53,7 +53,7 @@ class ListUserTile extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                flex: 4,
+                flex: 3,
                 child: ClipRRect(
                   child: CachedNetworkImage(
                     imageUrl: absenImage,

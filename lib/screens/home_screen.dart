@@ -35,7 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
   String _currentAddressCountry;
   String _timeString;
   String _time;
-  DateTime lastPressed;
+  DateTime lastPressed = DateTime.now();
+  String _timeDateQ;
+  String _timeDate;
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -104,18 +106,29 @@ class _HomeScreenState extends State<HomeScreen> {
         DateFormat.yMEd().add_jm().format(DateTime.now()).toString();
     final String formattedTime =
         DateFormat.E().add_jm().format(DateTime.now()).toString();
+    final String formattedDate =
+        DateFormat.d().format(DateTime.now()).toString();
 
     if (mounted) {
       setState(() {
+        _timeDate = formattedDate;
         _timeString = formattedDateTime;
         _time = formattedTime;
       });
     }
   }
 
+  void _getDate() {
+    final String formattedDate =
+        DateFormat.d().format(DateTime.now()).toString();
+
+    _timeDateQ = formattedDate;
+  }
+
   _saveBool() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.setBool("check", isButton);
+    await preferences.setString("date", _timeDateQ);
   }
 
   _loadBool() async {
@@ -123,6 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (mounted) {
       setState(() {
         isButton = preferences.getBool("check");
+        _timeDateQ = preferences.getString("date");
       });
     }
   }
@@ -132,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     _determinePosition();
+    _getDate();
     _loadBool();
     Timer.periodic(const Duration(seconds: 1), (Timer t) => _getTime());
   }
@@ -141,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _determinePosition();
     _getAddressFromLatLng();
     _getCurrentLocation();
+    _getDate();
     _loadBool();
     Timer.periodic(const Duration(seconds: 1), (Timer t) => _getTime());
     super.dispose();
@@ -151,6 +167,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final loginUser = Provider.of<UserAbsen>(context);
     return loginUser == null
         ? Container(
+            height: 100,
+            width: 100,
             child: const SizedBox(
               height: 20,
               width: 20,
@@ -191,12 +209,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       const IconThemeData(color: kColorMain, size: 30),
                   children: [
                     SpeedDialChild(
-                        backgroundColor: Colors.green,
-                        child:
-                            FaIcon(FontAwesomeIcons.check, color: Colors.white),
-                        label: 'Check In!',
-                        visible: isButton == true ? false : true,
-                        onTap: () async {
+                      backgroundColor: Colors.green,
+                      child:
+                          FaIcon(FontAwesomeIcons.check, color: Colors.white),
+                      label: 'Check In!',
+                      visible: isButton == false ? true : false,
+                      onTap: () async {
+                        if (_timeDate == _timeDateQ) {
                           String imageAbsen = await Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -215,11 +234,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                 imageAbsen);
 
                             setState(() {
+                              final String formattedDate = DateFormat.d()
+                                  .format(DateTime.now().add(Duration(days: 1)))
+                                  .toString();
+                              _timeDateQ = formattedDate;
                               isButton = true;
                               _saveBool();
                             });
                           }
-                        }),
+                        } else {
+                          setState(() {
+                            // final String formattedDate = DateFormat.d()
+                            //     .format(DateTime.now())
+                            //     .toString();
+                            // _timeDateQ = formattedDate;
+                            // _saveBool();
+                            Fluttertoast.showToast(
+                                msg:
+                                    'Hari ini tanggal ${_timeDate} sudah Check In! \n Check In akan aktif kembali pada tanggal ${_timeDateQ}!');
+                          });
+                        }
+                      },
+                    ),
                     SpeedDialChild(
                       backgroundColor: Colors.red,
                       child: FaIcon(FontAwesomeIcons.checkDouble,

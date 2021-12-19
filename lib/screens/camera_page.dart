@@ -1,9 +1,11 @@
 import 'package:absensi/components/constants.dart';
+import 'package:absensi/models/user.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:camera/camera.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/src/provider.dart';
 
 class CameraPage extends StatefulWidget {
   @override
@@ -31,11 +33,14 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   String userPhotoUrl;
+  String userId;
 
   Future uploadImageToFirebase(BuildContext context) async {
+    final user = context.read<UserAbsen>();
+    userId = user.uid;
     String filePath = _imageFile.path;
     FirebaseStorage storage = FirebaseStorage.instance;
-    Reference ref = storage.ref().child('uplouds/${filePath}');
+    Reference ref = storage.ref().child('uplouds/${userId}/${filePath}');
     UploadTask uploadTask = ref.putFile(_imageFile);
     await uploadTask.then((res) =>
         res.ref.getDownloadURL().then((value) => userPhotoUrl = value));

@@ -94,7 +94,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         titleButton: 'LOGIN',
                         colorButton: kColorMain,
                         pressedButton: () {
-                          Navigator.pushNamed(context, LoginScreen.id);
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, LoginScreen.id, (route) => false);
                         },
                       ),
                     ),
@@ -142,7 +143,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         titleButton: 'SIGNUP',
                         colorButton: kColorMain2,
                         pressedButton: () {
-                          Navigator.pushNamed(context, RegistrationScreen.id);
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, RegistrationScreen.id, (route) => false);
                         },
                       ),
                     ),

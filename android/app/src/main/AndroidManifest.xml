@@ -2,10 +2,10 @@
     package="com.isolte.absensi">
     
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
    <application
-        android:label="absensi"
+        android:label="Absensi"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

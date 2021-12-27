@@ -1,8 +1,6 @@
 import 'package:absensi/models/user.dart';
-import 'package:absensi/screens/welcome_screen.dart';
 import 'package:absensi/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthService {

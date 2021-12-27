@@ -3,7 +3,6 @@ import 'package:absensi/screens/home_screen.dart';
 import 'package:absensi/screens/login_screen.dart';
 import 'package:absensi/screens/welcome_screen.dart';
 import 'package:absensi/services/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi/components/constants.dart';
 import 'package:absensi/components/round_button.dart';

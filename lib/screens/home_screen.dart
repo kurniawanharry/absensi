@@ -118,13 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _getDate() {
-    final String formattedDate =
-        DateFormat.d().format(DateTime.now()).toString();
-
-    _timeDateQ = formattedDate;
-  }
-
   _saveBool() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.setBool("check", isButton);
@@ -135,8 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if (mounted) {
       setState(() {
-        isButton = preferences.getBool("check");
-        _timeDateQ = preferences.getString("date");
+        isButton = preferences.getBool("check") ?? false;
+        _timeDateQ = preferences.getString("date") ??
+            DateFormat.d().format(DateTime.now()).toString();
       });
     }
   }
@@ -146,9 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     _determinePosition();
-    _getDate();
-    _loadBool();
     Timer.periodic(const Duration(seconds: 1), (Timer t) => _getTime());
+    _loadBool();
   }
 
   @override
@@ -156,19 +149,17 @@ class _HomeScreenState extends State<HomeScreen> {
     _determinePosition();
     _getAddressFromLatLng();
     _getCurrentLocation();
-    _getDate();
     _loadBool();
-    Timer.periodic(const Duration(seconds: 1), (Timer t) => _getTime());
+    _getTime();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final loginUser = Provider.of<UserAbsen>(context);
-    return loginUser == null
+    return loginUser == null || _timeDateQ == null
         ? Container(
-            height: 100,
-            width: 100,
+            alignment: Alignment.center,
             child: const SizedBox(
               height: 20,
               width: 20,
@@ -235,7 +226,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             setState(() {
                               final String formattedDate = DateFormat.d()
-                                  .format(DateTime.now().add(Duration(days: 1)))
+                                  .format(DateTime.now()
+                                      .add(const Duration(days: 1)))
                                   .toString();
                               _timeDateQ = formattedDate;
                               isButton = true;
@@ -258,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SpeedDialChild(
                       backgroundColor: Colors.red,
-                      child: FaIcon(FontAwesomeIcons.checkDouble,
+                      child: const FaIcon(FontAwesomeIcons.checkDouble,
                           color: Colors.white),
                       label: 'Check Out!',
                       visible: isButton == true ? true : false,
@@ -272,7 +264,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         );
                         if (imageAbsen == null) {
-                          Container(child: CircularProgressIndicator());
+                          // ignore: avoid_unnecessary_containers
+                          Container(child: const CircularProgressIndicator());
                         } else {
                           DatabaseService(uid: loginUser.uid).addData(_time,
                               _currentAddressCountry, 'Check Out!', imageAbsen);

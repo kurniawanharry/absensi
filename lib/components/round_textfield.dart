@@ -19,17 +19,21 @@ class RoundTextField extends StatelessWidget {
   final FormFieldValidator<String> validator;
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      keyboardType: inputType,
-      obscureText: secureText,
-      onChanged: outputValue,
-      validator: validator,
-      style: TextStyle(
-        color: Colors.black54,
-      ),
-      decoration: kTextFieldDecoration.copyWith(
-        hintText: hintText,
-        prefixIcon: iconButton,
+    return Theme(
+      data: Theme.of(context)
+          .copyWith(primaryColor: kColorMain2, focusColor: kColorMain2),
+      child: TextFormField(
+        keyboardType: inputType,
+        obscureText: secureText,
+        onChanged: outputValue,
+        validator: validator,
+        style: const TextStyle(
+          color: Colors.black54,
+        ),
+        decoration: kTextFieldDecoration.copyWith(
+          hintText: hintText,
+          prefixIcon: iconButton,
+        ),
       ),
     );
   }

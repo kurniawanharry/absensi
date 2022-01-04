@@ -54,36 +54,25 @@ class _ListViewUserState extends State<ListViewUser> {
                     ? CircularProgressIndicator()
                     : Text('No Activity',
                         style: kTextStyle.copyWith(
-                            fontSize: 20, color: Colors.white30)))
+                            fontSize: 20, color: kColorMain4)))
             : Align(
                 alignment: Alignment.topCenter,
-                child: GridView.builder(
-                    reverse: true,
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            childAspectRatio: 1.7,
-                            crossAxisSpacing: 2,
-                            mainAxisSpacing: 2),
+                child: ListView.builder(
                     cacheExtent: 9999,
                     itemCount: absen.length,
                     itemBuilder: (context, index) {
                       final task = absen[index];
                       return Center(
                         child: Padding(
-                          padding: EdgeInsets.all(1.0),
+                          padding: EdgeInsets.only(bottom: 20),
                           child: ListUserTile(
                             checkTime: task.userTime,
                             userLocation: task.userLocation,
-                            userCheckInOrOut: task.userCheck,
-                            userColor: task.userCheck == 'Check In!'
-                                ? Colors.green
-                                : Colors.red,
-                            gradientColor: task.userCheck == 'Check In!'
-                                ? GradientColors.checkIn
-                                : GradientColors.checkOut,
-                            absenImage: task.userImage,
+                            userCheckIn: task.userCheck,
+                            checkTimeOut: task.userTimeOut,
+                            userLocationOut: task.userLocationOut,
+                            userCheckOut: task.userCheckOut,
+                            //absenImage: task.userImage,
                           ),
                         ),
                       );

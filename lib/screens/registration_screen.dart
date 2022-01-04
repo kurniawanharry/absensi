@@ -62,7 +62,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 30, left: 10),
                               child: BackButton(
-                                color: Colors.white,
+                                color: kColorMain2,
                                 onPressed: () {
                                   Navigator.pushReplacementNamed(
                                       context, WelcomeScreen.id);

@@ -25,7 +25,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2E4C6D),
+      backgroundColor: kColorMain,
       body: Column(
         children: <Widget>[
           Expanded(
@@ -47,7 +47,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           Expanded(
             flex: 4,
             child: Container(
-              padding: EdgeInsets.only(left: 60.0, right: 60.0),
+              padding: EdgeInsets.only(left: 30.0, right: 30.0),
               decoration: kContainerDecoration,
               child: Stack(
                 fit: StackFit.expand,
@@ -58,25 +58,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 children: <Widget>[
                   Positioned(
                     top: -25,
-                    left: 20,
-                    right: 20,
+                    left: 10,
+                    right: 10,
                     child: Container(
                       height: 50,
                       width: 50,
-                      decoration: kContainerDecoration.copyWith(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          topRight: Radius.circular(20.0),
-                          bottomLeft: Radius.circular(20.0),
-                          bottomRight: Radius.circular(20.0),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black54,
-                              blurRadius: 1.0,
-                              offset: Offset(0.0, 0.75))
-                        ],
-                      ),
                       child: Center(
                         child: Text(
                           'Absensi',
@@ -89,10 +75,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Positioned(
                     top: 80,
                     left: 40,
+                    right: 40,
                     child: Container(
                       child: RoundedButton(
                         titleButton: 'LOGIN',
-                        colorButton: kColorMain,
+                        colorButton: kColorMain2,
                         pressedButton: () {
                           Navigator.pushNamedAndRemoveUntil(
                               context, LoginScreen.id, (route) => false);
@@ -138,6 +125,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Positioned(
                     top: 160,
                     left: 40,
+                    right: 40,
                     child: Container(
                       child: RoundedButton(
                         titleButton: 'SIGNUP',

@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 30, left: 10),
                           child: BackButton(
-                            color: Colors.white,
+                            color: kColorMain2,
                             onPressed: () {
                               Navigator.pushReplacementNamed(
                                   context, WelcomeScreen.id);
@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             RoundedButton(
                               titleButton: 'LOGIN',
-                              colorButton: kColorMain,
+                              colorButton: kColorMain2,
                               pressedButton: () async {
                                 if (_formKey.currentState.validate()) {
                                   final user =

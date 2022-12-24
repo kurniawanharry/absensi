@@ -52,7 +52,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               child: Stack(
                 fit: StackFit.expand,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                overflow: Overflow.visible,
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -66,8 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       child: Center(
                         child: Text(
                           'Absensi',
-                          style: kTextStyle.copyWith(
-                              color: Colors.black54, fontSize: 30),
+                          style: kTextStyle.copyWith(color: Colors.black54, fontSize: 30),
                         ),
                       ),
                     ),
